@@ -6,6 +6,7 @@ A website that, together with an Arduino and a magnetic reed switch, tells you i
 Installation 
 ------------
 **The current code has not been tested, the follwing is the intended installation**
+
 1. Upload the code in `doorchecker.ino` the the Arduino and assemble the Arduino and the magnetic reed switch according to the schematics. Then connect the Arduino, via USB to the computer on which the web server is running. Also mount the magnetic reed switch on the door/drawer/anything that can be open/closed.
 2. Place the Python script, `doorchecker.py` somewhere on the server. Also edit the file and replace `/dev/ttyACM0` with the name of your Arduino and also specify the path of `index.html`. (When connecting the Arduino, type `dmesg` and it will probably be there somewhere.)
 3. Start the Python script (Preferrebly using `screen` maybe?).  
