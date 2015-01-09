@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python3
 def main():
 	from time import sleep
 	import serial
@@ -23,22 +23,27 @@ def main():
 			raise e
 		finally:
 			f.close()
+			print("We succeeded in writing a new file.")
 
 	def get_status():
+		print("I'm gonna try talk to the arduino now...")
 		# Establish a serial connection with the Arduino.  
 		# Change '/dev/ttyACM0' to whatever is appropriate.
-		ser = serial.Serial('/dev/ttyACM0',9600)
+		ser = serial.Serial('/dev/ttyUSB0',9600)
 
-		# The arduino resets every time a serial connection is established and the
-		# following is somewhat of a workaround. 
-		# Reset can be disabled by placing a 120 ohm resistor between reset and gnd.
-		#
-		# The workaround is that we wait for the Arduino to reset, and to send a sign 
-		# of life. Then we send it an arbitrary char to let it know that we are able
-		# recieve. 
-		 
-		x = ser.readline()
-		ser.write(b'A')
+		'''
+		Depending on your setup, the arduino will reset on a new serial connection
+		and it will take some time before the Arduino is ready to recieve messages.
+		Therefore we must wait some time (0.2 seconds worked good for me. 0.1 caused 
+		weird behavior.) and then send the data.
+
+		Sending a character 'x' will cause the arduino to return the sensor value.
+		1 if the reed switch is open, 0 closed. 
+
+		'''
+
+		sleep(0.2)
+		ser.write(b'x')
 
 		# The Arduino sends data in bytes, so we decode into utf-8
 		status = ser.readline().decode('utf-8')
@@ -51,7 +56,11 @@ def main():
 		except Exception as e:
 			raise e
 		if oldStatus != newStatus:
-			write_to_file(newStatus)
+			if newStatus.rstrip() == "1":
+				status = 1
+			else:
+				status = 0				
+			write_to_file(status)
 			oldStatus = newStatus
 		else:
 			pass
