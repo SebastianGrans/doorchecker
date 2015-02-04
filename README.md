@@ -5,13 +5,13 @@ A website that, together with an Arduino and a magnetic reed switch, tells you i
 
 News/Release notes
 ----
-** Feb 4, 2015 **
+**Feb 4, 2015**
 The device was installed in its live environment yesterday and it is up and running [fyskam.fysik.uu.se/ar-skamvran-oppen](http://fyskam.fysik.uu.se/ar-skamvran-oppen) (The ugly interface is intentional).
 
 During the installation we had some issues. When testing, the device was connected to a Raspberry Pi running Raspbian and for some reason the device did not reset on new serial connections. In the live environment however, it did reset. So the code was slightly modified.
 
 
-** Jan 9, 2015 **
+**Jan 9, 2015**
 Latest commit is a "big" update. I bought a Arduino Nano clone which did not cooperate with everything written for the Arduino Uno. In OS X the Arduino Nano did reset on Serial connection (just as the Uno), but on linux it did not. Which resulted in the Python code not working. Also I changed the schematics a bit.
 
 Also: I built an enclosure for the whole package.
