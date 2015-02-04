@@ -16,17 +16,17 @@ def main():
 					 <link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">\
 					 </head>\
 					 <body>\
-					 <p>" + var + "</p>\
+					 <p>" + str(var) + "</p>\
 					 </body>\
 					 </html>")
 		except Exception as e:
 			raise e
 		finally:
 			f.close()
-			print("We succeeded in writing a new file.")
+			print("Successfully updated the file.")
 
 	def get_status():
-		print("I'm gonna try talk to the arduino now...")
+		print("Opening connection... ", end="")
 		# Establish a serial connection with the Arduino.  
 		# Change '/dev/ttyACM0' to whatever is appropriate.
 		ser = serial.Serial('/dev/ttyUSB0',9600)
@@ -43,11 +43,24 @@ def main():
 		'''
 
 		sleep(0.2)
-		ser.write(b'x')
 
-		# The Arduino sends data in bytes, so we decode into utf-8
+		# Sends an 'x' to the arduino which will reset, and respond with "I'm alive"
+		# If serial-reset is not an issue, the next three rows can be commented.
+		# On the other hand, leaving it as is should not affect the behaviour.
+		ser.write(b'x') 
+		status = ser.readline().decode('utf-8') # The Arduino sends data in bytes,
+												# so we decode into utf-8
+		print("Arduino respons: ", status)
+
+
+		print("Sending data request... ", end="")
+		# Send an 'x', and the arduino respons with switch status.
+		ser.write(b'x')
 		status = ser.readline().decode('utf-8')
-		ser.close();
+		print("Data rasponse: ", status.rstrip())
+
+
+		ser.close()
 		return status
 
 	while True:
@@ -56,6 +69,7 @@ def main():
 		except Exception as e:
 			raise e
 		if oldStatus != newStatus:
+			print("Status has changed, trying to update the file.", end="")
 			if newStatus.rstrip() == "1":
 				status = 1
 			else:
@@ -64,7 +78,7 @@ def main():
 			oldStatus = newStatus
 		else:
 			pass
-		sleep(60)
+		sleep(30) # Update frequency. Change this to whatever suits your needs.
 
 if __name__ == '__main__':
 	main()

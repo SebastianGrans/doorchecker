@@ -3,8 +3,15 @@ Doorchecker
 
 A website that, together with an Arduino and a magnetic reed switch, tells you if a door is open.
 
-News
+News/Release notes
 ----
+** Feb 4, 2015 **
+The device was installed in its live environment yesterday and it is up and running [fyskam.fysik.uu.se/ar-skamvran-oppen](http://fyskam.fysik.uu.se/ar-skamvran-oppen) (The ugly interface is intentional).
+
+During the installation we had some issues. When testing, the device was connected to a Raspberry Pi running Raspbian and for some reason the device did not reset on new serial connections. In the live environment however, it did reset. So the code was slightly modified.
+
+
+** Jan 9, 2015 **
 Latest commit is a "big" update. I bought a Arduino Nano clone which did not cooperate with everything written for the Arduino Uno. In OS X the Arduino Nano did reset on Serial connection (just as the Uno), but on linux it did not. Which resulted in the Python code not working. Also I changed the schematics a bit.
 
 Also: I built an enclosure for the whole package.
@@ -13,7 +20,7 @@ Also: I built an enclosure for the whole package.
 
 Installation 
 ------------
-**The current code has not been tested, the follwing is the intended installation**
+**The current code has not been tested, the following is the intended installation**
 
 1. Upload the code in `doorchecker.ino` the the Arduino and assemble the Arduino and the magnetic reed switch according to the schematics. Then connect the Arduino, via USB to the computer on which the web server is running. Also mount the magnetic reed switch on the door/drawer/anything that can be open/closed.
 2. Place the Python script, `doorchecker.py` somewhere on the server. Also edit the file and replace `/dev/ttyACM0` with the name of your Arduino and also specify the path of `index.html`. (When connecting the Arduino, type `dmesg` and it will probably be there somewhere.)
