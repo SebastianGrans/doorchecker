@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 def main():
 	from time import sleep
+	from datetime import datetime
+	import os
 	import serial
 
 	oldStatus = False
@@ -63,22 +65,45 @@ def main():
 		ser.close()
 		return status
 
+	def write_raw_data(status):
+		"""Skriver ner timestamps i filer som är döpta efter dagen
+		   som timestampen togs, dessa filer kan sedan återfinnas
+		   i en mappstruktur som ser ut så här: 
+		   		ÅR -> MÅNAD -> DAG.txt
+		"""
+		date = datetime.now().date().__str__().split("-")
+		directory = os.path.join(date[0] + "/" + date[1])
+		filePath = date[0] + "/" + date[1] + "/" + date[2] + ".txt"
+		
+		if not os.path.exists(directory):
+			os.makedirs(directory)
+		try:
+			f = open(filePath, "a")
+		except:
+			print("New month")
+		finally:
+			f = open(filePath, "a")
+			f.write(str(status) + ", " + datetime.now().time().__str__().split(".")[0] + "\n")
+			f.close()
+
 	while True:
 		try:
 			newStatus = str(get_status())
 		except Exception as e:
+			print("Problem with getting the status from the arduino")
 			raise e
 		if oldStatus != newStatus:
-			print("Status has changed, trying to update the file.", end="")
+			print("Status has changed, trying to update the file", end="... ")
 			if newStatus.rstrip() == "1":
 				status = 1
 			else:
 				status = 0				
 			write_to_file(status)
+			write_raw_data(status)
 			oldStatus = newStatus
 		else:
 			pass
-		sleep(30) # Update frequency. Change this to whatever suits your needs.
+		sleep(10) # Update frequency. Change this to whatever suits your needs.
 
 if __name__ == '__main__':
 	main()
